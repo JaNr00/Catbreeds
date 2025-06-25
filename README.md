@@ -1,6 +1,6 @@
 # 🐱 Cat Breeds App – Flutter
 
-A mobile application built with Flutter that consumes the public [The Cat API](https://api.thecatapi.com/v1/breeds) to display information about different cat breeds.
+A mobile application built with Flutter that consumes the public [The Cat API](https://developers.thecatapi.com/) to display information about different cat breeds.
 
 
 ## 🛠️ Technologies Used
