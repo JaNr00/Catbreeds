@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:catbreeds/core/responsive/responsive.dart';
 import 'package:catbreeds/features/cats/domain/entities/cat.dart';
 import 'package:catbreeds/features/cats/presentation/landing_page/widgets/custom_cat_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,8 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Responsive responsive = Responsive.of(context);
+
     return Platform.isIOS
         ? const CupertinoPageScaffold(
             child: Text('Landing Page'),
@@ -23,9 +26,12 @@ class LandingPage extends StatelessWidget {
               shadowColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(50),
+                preferredSize: Size.fromHeight(responsive.hp(15)),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: responsive.wp(20),
+                    vertical: responsive.hp(5),
+                  ),
                   child: SearchBar(
                       elevation: WidgetStateProperty.resolveWith(
                         (_) {
@@ -61,7 +67,7 @@ class _CardsList extends StatelessWidget {
       id: 'id',
       name: 'Cat name',
       temperament: 'temperament',
-      origin: 'Colombian',
+      origin: 'Colombia',
       description:
           'Lorem Duis enim adipisicing enim mollit anim consequat incididunt non.',
       lifeSpan: 'lifeSpan',
@@ -79,11 +85,23 @@ class _CardsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    final Responsive responsive = Responsive.of(context);
+
+    return GridView.builder(
       itemCount: 5,
-      padding: const EdgeInsets.all(20),
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
-      itemBuilder: (context, index) => CustomCatCard(cat: catsList.first),
+      padding: EdgeInsets.symmetric(
+          horizontal: responsive.wp(8), vertical: responsive.hp(2)),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: responsive.isTablet() ? 2 : 1,
+        mainAxisSpacing:
+            responsive.isTablet() ? responsive.hp(5) : responsive.hp(8),
+        crossAxisSpacing:
+            responsive.isTablet() ? responsive.hp(5) : responsive.hp(8),
+        childAspectRatio: responsive.isTablet() ? 4 / 5 : 2 / 3,
+      ),
+      itemBuilder: (context, index) {
+        return CustomCatCard(cat: catsList[0]);
+      },
     );
   }
 }
