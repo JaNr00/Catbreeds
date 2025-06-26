@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:catbreeds/core/responsive/responsive.dart';
 import 'package:catbreeds/features/cats/domain/entities/cat.dart';
+import 'package:catbreeds/features/cats/presentation/detail_page/detail_page.dart';
+import 'package:catbreeds/shared/widgets/description_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -92,7 +94,14 @@ class _CardHeader extends StatelessWidget {
                   style: TextButton.styleFrom(
                       surfaceTintColor: Colors.transparent,
                       overlayColor: Colors.transparent),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(cat: cat),
+                      ),
+                    );
+                  },
                   child: const Text(
                     'Ver más',
                     style: TextStyle(decoration: TextDecoration.underline),
@@ -129,31 +138,15 @@ class _CardBottom extends StatelessWidget {
       padding: EdgeInsetsGeometry.symmetric(
           horizontal: responsive.wp(5), vertical: responsive.hp(2)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          RichText(
-            text: TextSpan(
-                text: 'Pais de origen:',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black87),
-                children: [
-                  TextSpan(
-                    text: ' ${cat.origin}',
-                    style: TextStyle(fontWeight: FontWeight.normal),
-                  )
-                ]),
+          DescriptionItem(
+            title: 'Origen: ',
+            description: cat.origin,
           ),
-          RichText(
-            text: TextSpan(
-                text: 'Inteligencia:',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black87),
-                children: [
-                  TextSpan(
-                    text: ' ${cat.intelligence}',
-                    style: TextStyle(fontWeight: FontWeight.normal),
-                  )
-                ]),
+          DescriptionItem(
+            title: 'Inteligencia: ',
+            description: cat.intelligence.toString(),
           ),
         ],
       ),

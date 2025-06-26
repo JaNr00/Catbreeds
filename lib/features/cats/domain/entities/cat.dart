@@ -13,12 +13,27 @@ class Cat {
   final String lifeSpan;
   final int adaptability;
   final int intelligence;
+  @JsonKey(name: 'child_friendly')
+  final int childFriendly;
+  @JsonKey(name: 'dog_friendly')
+  final int dogFriendly;
+  @JsonKey(name: 'stranger_friendly')
+  final int strangerFriendly;
+  @JsonKey(name: 'energy_level')
+  final int energyLevel;
+  @JsonKey(name: 'health_issues')
+  final int healthIssues;
   @JsonKey(name: 'wikipedia_url')
   final String? wikipediaUrl;
   final Weight weight;
   final CatImage image;
 
   Cat({
+    required this.childFriendly,
+    required this.dogFriendly,
+    required this.strangerFriendly,
+    required this.energyLevel,
+    required this.healthIssues,
     required this.id,
     required this.name,
     required this.temperament,
