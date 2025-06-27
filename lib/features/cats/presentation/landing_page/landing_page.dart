@@ -31,40 +31,44 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          'Catbreeds',
-          style: TextStyles(isTablet: responsive.isTablet()).titleHeadStyle,
-        ),
-        centerTitle: true,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
         backgroundColor: Colors.white,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(responsive.hp(15)),
-          child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: responsive.wp(5),
-                vertical: responsive.hp(5),
-              ),
-              child: Platform.isIOS
-                  ? CupertinoSearchTextField(
-                      placeholder: 'Busca por nombre de raza en inglés',
-                      onChanged: _onSearchChanged,
-                    )
-                  : SearchBar(
-                      elevation: WidgetStateProperty.all(5),
-                      backgroundColor:
-                          WidgetStateProperty.all(Colors.grey.shade100),
-                      trailing: const [Icon(Icons.search)],
-                      hintText: 'Busca por nombre de raza en inglés',
-                      onChanged: _onSearchChanged,
-                    )),
+        appBar: AppBar(
+          title: Text(
+            'Catbreeds',
+            style: TextStyles(isTablet: responsive.isTablet()).titleHeadStyle,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(responsive.hp(15)),
+            child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: responsive.wp(5),
+                  vertical: responsive.hp(5),
+                ),
+                child: Platform.isIOS
+                    ? CupertinoSearchTextField(
+                        placeholder: 'Busca por nombre de raza en inglés',
+                        onChanged: _onSearchChanged,
+                      )
+                    : SearchBar(
+                        elevation: WidgetStateProperty.all(5),
+                        backgroundColor:
+                            WidgetStateProperty.all(Colors.grey.shade100),
+                        trailing: const [Icon(Icons.search)],
+                        hintText: 'Busca por nombre de raza en inglés',
+                        onChanged: _onSearchChanged,
+                      )),
+          ),
         ),
+        body: SafeArea(child: const _CardsList()),
       ),
-      body: SafeArea(child: const _CardsList()),
     );
   }
 
@@ -72,6 +76,7 @@ class _LandingPageState extends State<LandingPage> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       context.read<LandingPageCubit>().searchCatsBreeds(searchTerm: value);
+      FocusScope.of(context).unfocus();
     });
   }
 }
@@ -105,7 +110,7 @@ class _CardsList extends StatelessWidget {
                       child: Text(
                       'No se encontraron resultados',
                       style: TextStyles(isTablet: responsive.isTablet())
-                          .titleHeadStyle
+                          .titleH2Style
                           .copyWith(color: Colors.grey.shade600),
                       maxLines: 2,
                     ))

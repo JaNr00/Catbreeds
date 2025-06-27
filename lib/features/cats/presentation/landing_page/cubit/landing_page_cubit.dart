@@ -10,15 +10,30 @@ class LandingPageCubit extends Cubit<LandingPageState> {
   final CatRepository _catRepository = TheCatApiRepository(
       dio: DioClient(baseUrl: 'https://api.thecatapi.com/v1/'));
 
-  void searchCatsBreeds({String? searchTerm}) async {
-    emit(LandingPageState(isLoading: true, failedSearch: false, catBreeds: []));
+  void loadAllBreeds() async {
+    emit(LandingPageState(isLoading: true));
     try {
-      final catBreeds =
-          await _catRepository.searchCatsBreeds(searchTerm: searchTerm);
+      final catBreeds = await _catRepository.loadAllBreeds();
 
       emit(LandingPageState(isLoading: false, catBreeds: catBreeds));
     } catch (e) {
-      emit(LandingPageState(failedSearch: true));
+      emit(LandingPageState(failedSearch: true, isLoading: false));
+    }
+  }
+
+  void searchCatsBreeds({required String searchTerm}) async {
+    if (searchTerm.isEmpty) {
+      loadAllBreeds();
+    } else {
+      emit(LandingPageState(isLoading: true));
+      try {
+        final catBreeds =
+            await _catRepository.searchCatsBreeds(searchTerm: searchTerm);
+
+        emit(LandingPageState(isLoading: false, catBreeds: catBreeds));
+      } catch (e) {
+        emit(LandingPageState(failedSearch: true, isLoading: false));
+      }
     }
   }
 }

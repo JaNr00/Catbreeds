@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: BlocProvider(
-        create: (_) => LandingPageCubit(),
+        create: (_) => LandingPageCubit()..loadAllBreeds(),
         child: const LandingPage(),
       ),
     );

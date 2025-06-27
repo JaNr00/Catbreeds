@@ -101,15 +101,18 @@ class _CardHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(cat.name,
-              style: TextStyles(isTablet: responsive.isTablet()).titleH1Style),
+          Expanded(
+            child: Text(cat.name,
+                style:
+                    TextStyles(isTablet: responsive.isTablet()).titleH2Style),
+          ),
           Platform.isIOS
               ? CupertinoButton(
                   padding: EdgeInsets.zero,
                   child: Text(
                     'Ver más',
                     style: TextStyles(isTablet: responsive.isTablet())
-                        .titleH1Style
+                        .titleH2Style
                         .copyWith(
                             color: Colors.black45,
                             decoration: TextDecoration.underline),
@@ -125,7 +128,7 @@ class _CardHeader extends StatelessWidget {
                   child: Text(
                     'Ver más',
                     style: TextStyles(isTablet: responsive.isTablet())
-                        .titleH1Style
+                        .titleH2Style
                         .copyWith(
                             color: Colors.black45,
                             decoration: TextDecoration.underline),
@@ -162,7 +165,7 @@ class _CardImage extends StatelessWidget {
                 ? responsive.hp(50)
                 : responsive.hp(30),
         child: cat.image == null
-            ? Image.asset('lib/shared/assets/no_cat.jfif')
+            ? Image.asset('lib/shared/assets/images/no_cat.jfif')
             : Image.network(
                 cat.image!.url,
                 fit: BoxFit.cover,
@@ -184,16 +187,15 @@ class _CardBottom extends StatelessWidget {
       padding: EdgeInsetsGeometry.symmetric(
           horizontal: responsive.wp(5), vertical: responsive.hp(2)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          DescriptionItem(
-            title: 'Origen: ',
-            description: cat.origin ?? 'N/A',
+          Expanded(
+            child: DescriptionItem(
+              title: 'Origen: ',
+              description: cat.origin ?? 'N/A',
+            ),
           ),
-          DescriptionItem(
-            title: 'Inteligencia: ',
-            description: cat.intelligence?.toString() ?? 'N/A',
-          ),
+          SizedBox(width: responsive.wp(3)),
         ],
       ),
     );

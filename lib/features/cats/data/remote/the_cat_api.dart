@@ -25,4 +25,20 @@ class TheCatApiRepository extends CatRepository {
 
     return catBreeds;
   }
+
+  @override
+  Future<List<CatBreed>> loadAllBreeds() async {
+    final response = await _dio.get('/breeds', headers: {
+      'x-api-key':
+          'live_99Qe4Ppj34NdplyLW67xCV7Ds0oSLKGgcWWYnSzMJY9C0QOu0HUR4azYxWkyW2nr'
+    });
+
+    List<CatBreed> catBreeds = [];
+
+    for (var catBreed in response.data) {
+      catBreeds.add(CatBreed.fromJson(catBreed));
+    }
+
+    return catBreeds;
+  }
 }

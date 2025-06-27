@@ -34,7 +34,7 @@ class DetailPage extends StatelessWidget {
                   ? responsive.hp(30)
                   : responsive.hp(50),
               child: cat.image == null
-                  ? Image.asset('lib/shared/assets/no_cat.jfif')
+                  ? Image.asset('lib/shared/assets/images/no_cat.jfif')
                   : Image.network(
                       cat.image!.url,
                       fit: BoxFit.fitHeight,
