@@ -3,32 +3,32 @@ import 'package:json_annotation/json_annotation.dart';
 part 'cat.g.dart';
 
 @JsonSerializable()
-class Cat {
+class CatBreed {
   final String id;
   final String name;
-  final String temperament;
-  final String origin;
-  final String description;
+  final String? temperament;
+  final String? origin;
+  final String? description;
   @JsonKey(name: 'life_span')
-  final String lifeSpan;
-  final int adaptability;
-  final int intelligence;
+  final String? lifeSpan;
+  final int? adaptability;
+  final int? intelligence;
   @JsonKey(name: 'child_friendly')
-  final int childFriendly;
+  final int? childFriendly;
   @JsonKey(name: 'dog_friendly')
-  final int dogFriendly;
+  final int? dogFriendly;
   @JsonKey(name: 'stranger_friendly')
-  final int strangerFriendly;
+  final int? strangerFriendly;
   @JsonKey(name: 'energy_level')
-  final int energyLevel;
+  final int? energyLevel;
   @JsonKey(name: 'health_issues')
-  final int healthIssues;
+  final int? healthIssues;
   @JsonKey(name: 'wikipedia_url')
   final String? wikipediaUrl;
-  final Weight weight;
-  final CatImage image;
+  final Weight? weight;
+  final CatBreedImage? image;
 
-  Cat({
+  CatBreed({
     required this.childFriendly,
     required this.dogFriendly,
     required this.strangerFriendly,
@@ -47,9 +47,10 @@ class Cat {
     required this.image,
   });
 
-  factory Cat.fromJson(Map<String, dynamic> json) => _$CatFromJson(json);
+  factory CatBreed.fromJson(Map<String, dynamic> json) =>
+      _$CatBreedFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CatToJson(this);
+  Map<String, dynamic> toJson() => _$CatBreedToJson(this);
 }
 
 @JsonSerializable()
@@ -68,21 +69,21 @@ class Weight {
 }
 
 @JsonSerializable()
-class CatImage {
+class CatBreedImage {
   final String id;
   final int width;
   final int height;
   final String url;
 
-  CatImage({
+  CatBreedImage({
     required this.id,
     required this.width,
     required this.height,
     required this.url,
   });
 
-  factory CatImage.fromJson(Map<String, dynamic> json) =>
-      _$CatImageFromJson(json);
+  factory CatBreedImage.fromJson(Map<String, dynamic> json) =>
+      _$CatBreedImageFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CatImageToJson(this);
+  Map<String, dynamic> toJson() => _$CatBreedImageToJson(this);
 }

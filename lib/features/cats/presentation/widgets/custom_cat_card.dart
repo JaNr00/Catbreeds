@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:catbreeds/core/responsive/responsive.dart';
 import 'package:catbreeds/features/cats/domain/entities/cat.dart';
 import 'package:catbreeds/features/cats/presentation/detail_page/detail_page.dart';
+import 'package:catbreeds/shared/styles/text_styles.dart';
 import 'package:catbreeds/shared/widgets/description_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ import 'package:flutter/material.dart';
 class CustomCatCard extends StatefulWidget {
   const CustomCatCard({super.key, required this.cat});
 
-  final Cat cat;
+  final CatBreed cat;
 
   @override
   State<CustomCatCard> createState() => _CustomCatCardState();
@@ -36,9 +38,27 @@ class _CustomCatCardState extends State<CustomCatCard>
 
   @override
   Widget build(BuildContext context) {
+    final List<Color> colors = [
+      Colors.green.shade400,
+      Colors.blue.shade400,
+      Colors.red.shade400,
+      Colors.purple.shade400
+    ];
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
+      onTapUp: (_) async {
+        _controller.reverse();
+
+        await Future.delayed(const Duration(milliseconds: 200));
+
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailPage(cat: widget.cat)),
+          );
+        }
+      },
       onTapCancel: () => _controller.reverse(),
       // onTap: () => {print('hola')},
       child: AnimatedBuilder(
@@ -53,7 +73,8 @@ class _CustomCatCardState extends State<CustomCatCard>
           color: Colors.white70,
           shape: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.black38)),
+              borderSide: BorderSide(
+                  color: colors[Random().nextInt(colors.length)], width: 2)),
           child: Column(children: [
             Flexible(child: _CardHeader(cat: widget.cat)),
             _CardImage(cat: widget.cat),
@@ -68,47 +89,59 @@ class _CustomCatCardState extends State<CustomCatCard>
 class _CardHeader extends StatelessWidget {
   const _CardHeader({required this.cat});
 
-  final Cat cat;
+  final CatBreed cat;
 
   @override
   Widget build(BuildContext context) {
+    final Responsive responsive = Responsive.of(context);
+
     return Padding(
       padding:
           EdgeInsetsGeometry.only(left: 50, right: 25, top: 20, bottom: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            cat.name,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(cat.name,
+              style: TextStyles(isTablet: responsive.isTablet()).titleH1Style),
           Platform.isIOS
               ? CupertinoButton(
-                  child: const Text('Ver más'),
-                  onPressed: () {},
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    'Ver más',
+                    style: TextStyles(isTablet: responsive.isTablet())
+                        .titleH1Style
+                        .copyWith(
+                            color: Colors.black45,
+                            decoration: TextDecoration.underline),
+                  ),
+                  onPressed: () => _navigateToDetail(context),
                 )
               : TextButton(
                   style: TextButton.styleFrom(
-                      surfaceTintColor: Colors.transparent,
-                      overlayColor: Colors.transparent),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailPage(cat: cat),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'Ver más',
-                    style: TextStyle(decoration: TextDecoration.underline),
+                    surfaceTintColor: Colors.transparent,
+                    overlayColor: Colors.transparent,
+                  ),
+                  onPressed: () => _navigateToDetail(context),
+                  child: Text(
+                    'Ver más',
+                    style: TextStyles(isTablet: responsive.isTablet())
+                        .titleH1Style
+                        .copyWith(
+                            color: Colors.black45,
+                            decoration: TextDecoration.underline),
                   ),
                 )
         ],
       ),
+    );
+  }
+
+  void _navigateToDetail(BuildContext context) {
+    Navigator.push(
+      context,
+      Platform.isIOS
+          ? CupertinoPageRoute(builder: (_) => DetailPage(cat: cat))
+          : MaterialPageRoute(builder: (_) => DetailPage(cat: cat)),
     );
   }
 }
@@ -116,18 +149,31 @@ class _CardHeader extends StatelessWidget {
 class _CardImage extends StatelessWidget {
   const _CardImage({required this.cat});
 
-  final Cat cat;
+  final CatBreed cat;
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(cat.image.url);
+    final Responsive responsive = Responsive.of(context);
+    return SizedBox(
+        width: double.infinity,
+        height: responsive.isLandscape()
+            ? responsive.hp(55)
+            : responsive.isTablet()
+                ? responsive.hp(50)
+                : responsive.hp(30),
+        child: cat.image == null
+            ? Image.asset('lib/shared/assets/no_cat.jfif')
+            : Image.network(
+                cat.image!.url,
+                fit: BoxFit.cover,
+              ));
   }
 }
 
 class _CardBottom extends StatelessWidget {
   const _CardBottom({required this.cat});
 
-  final Cat cat;
+  final CatBreed cat;
 
   @override
   Widget build(BuildContext context) {
@@ -142,11 +188,11 @@ class _CardBottom extends StatelessWidget {
         children: [
           DescriptionItem(
             title: 'Origen: ',
-            description: cat.origin,
+            description: cat.origin ?? 'N/A',
           ),
           DescriptionItem(
             title: 'Inteligencia: ',
-            description: cat.intelligence.toString(),
+            description: cat.intelligence?.toString() ?? 'N/A',
           ),
         ],
       ),

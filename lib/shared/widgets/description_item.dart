@@ -1,3 +1,5 @@
+import 'package:catbreeds/core/responsive/responsive.dart';
+import 'package:catbreeds/shared/styles/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DescriptionItem extends StatelessWidget {
@@ -16,16 +18,22 @@ class DescriptionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Responsive responsive = Responsive.of(context);
+
     return RichText(
       text: TextSpan(
           text: title,
           style: titleStyle ??
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+              TextStyles(isTablet: responsive.isTablet())
+                  .descriptionStyle
+                  .copyWith(color: Colors.black),
           children: [
             TextSpan(
               text: description,
-              style:
-                  descriptionStyle ?? TextStyle(fontWeight: FontWeight.normal),
+              style: descriptionStyle ??
+                  TextStyles(isTablet: responsive.isTablet())
+                      .descriptionStyle
+                      .copyWith(color: Colors.black87),
             )
           ]),
     );

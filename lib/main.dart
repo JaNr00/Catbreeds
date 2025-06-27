@@ -1,5 +1,7 @@
+import 'package:catbreeds/features/cats/presentation/landing_page/cubit/landing_page_cubit.dart';
 import 'package:catbreeds/features/cats/presentation/landing_page/landing_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +20,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
-      home: const LandingPage(),
+      home: BlocProvider(
+        create: (_) => LandingPageCubit(),
+        child: const LandingPage(),
+      ),
     );
   }
 }
