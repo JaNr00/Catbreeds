@@ -1,5 +1,6 @@
 import 'package:catbreeds/core/responsive/responsive.dart';
 import 'package:catbreeds/features/cats/domain/entities/cat.dart';
+import 'package:catbreeds/shared/assets/assets.dart';
 import 'package:catbreeds/shared/styles/text_styles.dart';
 import 'package:catbreeds/shared/util.dart';
 import 'package:catbreeds/shared/widgets/description_item.dart';
@@ -33,12 +34,19 @@ class DetailPage extends StatelessWidget {
               height: responsive.isTablet() || responsive.isLandscape()
                   ? responsive.hp(30)
                   : responsive.hp(50),
-              child: cat.image == null
-                  ? Image.asset('lib/shared/assets/images/no_cat.jfif')
-                  : Image.network(
-                      cat.image!.url,
-                      fit: BoxFit.fitHeight,
-                    )),
+              child: Image.network(
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(Assets.images.noCat);
+                },
+                cat.image?.url ?? '',
+                fit: BoxFit.cover,
+              )),
           Expanded(child: _CatDetails(cat: cat))
         ],
       ),

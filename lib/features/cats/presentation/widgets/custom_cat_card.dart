@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:catbreeds/core/responsive/responsive.dart';
 import 'package:catbreeds/features/cats/domain/entities/cat.dart';
 import 'package:catbreeds/features/cats/presentation/detail_page/detail_page.dart';
+import 'package:catbreeds/shared/assets/assets.dart';
 import 'package:catbreeds/shared/styles/text_styles.dart';
 import 'package:catbreeds/shared/widgets/description_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,7 +46,10 @@ class _CustomCatCardState extends State<CustomCatCard>
       Colors.purple.shade400
     ];
     return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
+      onTapDown: (_) {
+        FocusScope.of(context).unfocus();
+        _controller.forward();
+      },
       onTapUp: (_) async {
         _controller.reverse();
 
@@ -60,7 +64,6 @@ class _CustomCatCardState extends State<CustomCatCard>
         }
       },
       onTapCancel: () => _controller.reverse(),
-      // onTap: () => {print('hola')},
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
@@ -70,7 +73,7 @@ class _CustomCatCardState extends State<CustomCatCard>
           );
         },
         child: Card(
-          color: Colors.white70,
+          color: Colors.white,
           shape: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(
@@ -164,12 +167,19 @@ class _CardImage extends StatelessWidget {
             : responsive.isTablet()
                 ? responsive.hp(50)
                 : responsive.hp(30),
-        child: cat.image == null
-            ? Image.asset('lib/shared/assets/images/no_cat.jfif')
-            : Image.network(
-                cat.image!.url,
-                fit: BoxFit.cover,
-              ));
+        child: Image.network(
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset(Assets.images.noCat);
+          },
+          cat.image?.url ?? '',
+          fit: BoxFit.cover,
+        ));
   }
 }
 

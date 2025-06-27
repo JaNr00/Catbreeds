@@ -6,6 +6,7 @@ import 'package:catbreeds/features/cats/domain/entities/cat.dart';
 import 'package:catbreeds/features/cats/presentation/landing_page/cubit/landing_page_cubit.dart';
 import 'package:catbreeds/features/cats/presentation/landing_page/cubit/landing_page_state.dart';
 import 'package:catbreeds/features/cats/presentation/widgets/custom_cat_card.dart';
+import 'package:catbreeds/shared/assets/assets.dart';
 import 'package:catbreeds/shared/styles/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,43 +32,50 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
 
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      behavior: HitTestBehavior.translucent,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            'Catbreeds',
-            style: TextStyles(isTablet: responsive.isTablet()).titleHeadStyle,
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          shadowColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(responsive.hp(15)),
-            child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: responsive.wp(5),
-                  vertical: responsive.hp(5),
-                ),
-                child: Platform.isIOS
-                    ? CupertinoSearchTextField(
-                        placeholder: 'Busca por nombre de raza en inglés',
-                        onChanged: _onSearchChanged,
-                      )
-                    : SearchBar(
-                        elevation: WidgetStateProperty.all(5),
-                        backgroundColor:
-                            WidgetStateProperty.all(Colors.grey.shade100),
-                        trailing: const [Icon(Icons.search)],
-                        hintText: 'Busca por nombre de raza en inglés',
-                        onChanged: _onSearchChanged,
-                      )),
-          ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Color.fromARGB(255, 245, 245, 245),
+      appBar: AppBar(
+        title: Image.asset(
+          Assets.images.catBreedTitle,
+          width: double.infinity,
+          fit: BoxFit.contain,
+          height: responsive.hp(responsive.isLandscape() ? 10 : 5),
         ),
-        body: SafeArea(child: const _CardsList()),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(responsive.hp(15)),
+          child: Padding(
+              padding: EdgeInsets.only(
+                left: responsive.wp(5),
+                right: responsive.wp(5),
+                bottom: responsive.hp(5),
+              ),
+              child: Platform.isIOS
+                  ? CupertinoSearchTextField(
+                      placeholder: 'Busca por nombre de raza en inglés',
+                      onChanged: _onSearchChanged,
+                    )
+                  : SearchBar(
+                      elevation: WidgetStateProperty.all(5),
+                      backgroundColor:
+                          WidgetStateProperty.all(Colors.grey.shade100),
+                      trailing: const [Icon(Icons.search)],
+                      hintText: 'Busca por nombre de raza en inglés',
+                      onChanged: _onSearchChanged,
+                    )),
+        ),
+      ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.translucent,
+        child: Stack(children: [
+          Image.asset(Assets.images.catBreedIcon),
+          Container(color: Colors.white70),
+          SafeArea(child: const _CardsList())
+        ]),
       ),
     );
   }
